@@ -28,7 +28,6 @@ export class RegistrationEffects {
     exhaustMap(payload => {
       return from(this.doGoogleRegistration()).pipe(
         switchMap(credential => {
-          console.debug('credential', credential);
           const authData = credential.user;
           const photoUrl = authData.photoURL;
           const user = new User(authData.uid, authData.displayName, authData.email, authData.phoneNumber, photoUrl, authData.emailVerified);
@@ -46,10 +45,8 @@ export class RegistrationEffects {
     exhaustMap(payload => {
       return from(this.doFacebookRegistration()).pipe(
         switchMap(credential => {
-          console.debug('facebookSignUp', credential);
           const authData = credential.user;
           const photoUrl = authData.photoURL;
-          console.log('PhotoUrl', photoUrl);
           const user = new User(authData.uid, authData.displayName, authData.email, authData.phoneNumber, photoUrl, authData.emailVerified);
           return from([new SetProviders({facebook: true}), new AuthActions.RegistrationSuccess({user})]);
         }),
@@ -70,7 +67,6 @@ export class RegistrationEffects {
     exhaustMap(credentials => {
       return from(this.doSignUpWithCredentials(credentials)).pipe(
         map(credential => {
-          console.debug('doSignUpWithCredentials', credential);
           const authData = credential.user;
           const user = new User(authData.uid, authData.displayName, authData.email, authData.phoneNumber, authData.photoURL, authData.emailVerified);
           return new AuthActions.RegistrationSuccess({user});

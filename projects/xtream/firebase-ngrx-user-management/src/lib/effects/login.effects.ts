@@ -29,13 +29,10 @@ export class LoginEffects {
     exhaustMap(payload => this.afAuth.authState.pipe(
       take(1),
       switchMap(authData => {
-        console.debug(authData);
         if (authData) {
           /// User logged in
-          console.debug('USER', authData);
           return zip(from(authData.getIdToken(true))).pipe(
             switchMap(res => {
-              console.debug('providers found', authData.providerData);
               const providers = authData.providerData.reduce((prev, current) => {
                 const key = PROVIDERS_MAP[current.providerId];
                 if (key) {
@@ -43,7 +40,6 @@ export class LoginEffects {
                 }
                 return prev;
               }, {});
-              console.debug(providers, authData.providerData.map(p => p.providerId));
               const user = new User(authData.uid, authData.displayName, authData.email, authData.phoneNumber, authData.photoURL, authData.emailVerified);
               return from([new SetProviders(providers), new userActions.Authenticated({user})]);
             })

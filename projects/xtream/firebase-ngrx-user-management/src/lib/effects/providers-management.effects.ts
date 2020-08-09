@@ -115,7 +115,6 @@ export class ProvidersManagementEffects {
         return this.afAuth.auth.currentUser.linkWithPhoneNumber(payload.number, new firebase.auth.RecaptchaVerifier(payload.captchaContainerId, {
           size: 'invisible',
           callback: token => {
-            console.debug('Captcha token', token);
 
           }
         })).then(confirmation => {
